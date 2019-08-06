@@ -44,14 +44,14 @@
     </snapshotRepository>
   </distributionManagement>
   <properties>
-    <cossdk.version>2.3.0</cossdk.version>
+    <cossdk.version>2.5.2</cossdk.version>
     <jre.version>1.8</jre.version>
     <junit.version>4.12</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.boot.test.version>2.0.2.RELEASE</spring.boot.test.version>
-    <spring.boot.version>1.5.3.RELEASE</spring.boot.version>
-    <spring.test.version>5.0.6.RELEASE</spring.test.version>
-    <spring.version>4.3.17.RELEASE</spring.version>
+    <spring.boot.test.version>2.0.9.RELEASE</spring.boot.test.version>
+    <spring.boot.version>1.5.21.RELEASE</spring.boot.version>
+    <spring.test.version>5.0.14.RELEASE</spring.test.version>
+    <spring.version>4.3.23.RELEASE</spring.version>
   </properties>
   <dependencyManagement>
     <dependencies>
