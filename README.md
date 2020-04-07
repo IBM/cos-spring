@@ -3,8 +3,8 @@
 The is a library to provide Spring developers easy configuration of the [IBM COS SDK for Java](https://github.com/ibm/ibm-cos-sdk-java/).
 
 The library is split into two parts:
-* `cos-spring-boot-starter` for [Spring Boot](https://projects.spring.io/spring-boot/) applications
 
+* `cos-spring-boot-starter` for [Spring Boot](https://projects.spring.io/spring-boot/) applications
 * `cos-spring-framework` for [Spring Framework](https://projects.spring.io/spring-framework/) applications
 
 ## Installation and Usage
@@ -12,6 +12,7 @@ The library is split into two parts:
 ### Spring Boot Applications
 
 Gradle:
+
 ```groovy
 dependencies {
     compile group: 'com.ibm.cos', name: 'cos-spring-boot-starter', version: '1.0.0'
@@ -19,17 +20,19 @@ dependencies {
 ```
 
 Maven:
-~~~ xml
+
+```xml
 <dependency>
   <groupId>com.ibm.cos</groupId>
   <artifactId>cos-spring-boot-starter</artifactId>
   <version>1.0.0</version>
 </dependency>
-~~~
+```
 
 ### Spring Framework Applications
 
 Gradle:
+
 ```groovy
 dependencies {
     compile group: 'com.ibm.cos', name: 'cos-spring-framework', version: '1.0.0'
@@ -37,13 +40,14 @@ dependencies {
 ```
 
 Maven:
-~~~ xml
+
+```xml
 <dependency>
   <groupId>com.ibm.cos</groupId>
   <artifactId>cos-spring-framework</artifactId>
   <version>1.0.0</version>
 </dependency>
-~~~
+```
 
 ## Getting Started
 
@@ -62,36 +66,36 @@ Bucket creation operations. If using HMAC credentials, Access Key and Secret Key
 
 For example using IAM credentials with an optional Service Instance ID in an `application.properties` file:
 
-~~~
+```properties
 cos.endpoint=https://s3-api.us-geo.objectstorage.softlayer.net
 cos.location=us
 cos.api-key=myApiKey
 cos.service-instance-id=myServiceInstanceId
-~~~
+```
 
 Another example using HMAC credentials:
 
-~~~
+```properties
 cos.endpoint=https://s3-api.us-geo.objectstorage.softlayer.net
 cos.location=us
 cos.access-key=myAccessKey
 cos.secret-key=mySecretKey
-~~~
+```
 
 Spring Boot will create a `com.ibm.cloud.objectstorage.services.s3.AmazonS3` bean that can be used to interact with your COS instance:
 
-~~~ java
+```java
 @Autowired
 private AmazonS3 client;
 
 public boolean isBucketAvailable(String bucket) {
     return client.doesBucketExist(bucket);
 }
-~~~
+```
 
 To provide custom client options you can override the `com.ibm.cloud.objectstorage.services.s3.AmazonS3ClientBuilder` bean and provide your own properties:
 
-~~~ java
+```java
 @SpringBootApplication
 public class DemoApplication {
 
@@ -117,15 +121,15 @@ public class DemoApplication {
         .withPathStyleAccessEnabled(true);
     }
 }
-~~~
+```
 
 application.properties:
 
-~~~
+```properties
 cos.endpoint=https://s3-api.us-geo.objectstorage.softlayer.net
 cos.location=us
 cos.api-key=myApiKey
-~~~
+```
 
 ### Spring Framework Applications
 
@@ -133,24 +137,25 @@ See Spring Boot section for required and optional properties.
 
 To enable the creation of the `com.ibm.cloud.objectstorage.services.s3.AmazonS3` bean you must add an `com.ibm.cos.spring.framework.EnableCOS` annotation to your application configuration:
 
-~~~ java
+```java
 @Configuration
 @EnableWebMvc
 @EnableCOS
 @ComponentScan
 public class SpringConfig {}
-~~~
+```
 
-~~~ java
+```java
 @Autowired
 private AmazonS3 client;
 
 public boolean isBucketAvailable(String bucket) {
     return client.doesBucketExist(bucket);
 }
-~~~
+```
 
 ## Related documentation
+
 * [IBM COS SDK for Java](https://github.com/ibm/ibm-cos-sdk-java/)
 * [COS documentation](https://console.bluemix.net/docs/services/cloud-object-storage/)
 * [Spring Boot documentation](https://projects.spring.io/spring-boot/)
@@ -162,11 +167,12 @@ Copyright © 2018 IBM Corp. All rights reserved.
 
 Licensed under the apache license, version 2.0 (the "license"); you may not use this file except in compliance with the license.  you may obtain a copy of the license at
 
-    http://www.apache.org/licenses/LICENSE-2.0.html
+`http://www.apache.org/licenses/LICENSE-2.0.html`
 
 Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "as is" basis, without warranties or conditions of any kind, either express or implied. See the license for the specific language governing permissions and limitations under the license.
 
 ## Getting help
+
 Feel free to use GitHub issues for tracking bugs and feature requests, but for help please use one of the following resources:
 
 * Ask a question on [StackOverflow][stack-overflow] and tag it with `ibm` and `object-storage`
@@ -174,6 +180,5 @@ Feel free to use GitHub issues for tracking bugs and feature requests, but for h
 * If it turns out that you may have found a bug, please [open an issue][open-an-issue]
 
 [stack-overflow]: http://stackoverflow.com/questions/tagged/object-storage+ibm
-[ibm-bluemix-support]: https://support.ng.bluemix.net/gethelp/
+[ibm-bluemix-support]: https://cloud.ibm.com/unifiedsupport/supportcenter/
 [open-an-issue]: https://github.com/IBM/cos-spring/issues/new
-
