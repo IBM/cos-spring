@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.0.3
+
+### Content
+
+#### Defect Fixes
+
+* COSSDK-66005: Updates for optimizing dependencies for user applications
+
 ## 1.0.2
 
 ### Content
