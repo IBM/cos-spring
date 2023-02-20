@@ -4,11 +4,12 @@
   <parent>
     <artifactId>cos-spring</artifactId>
     <groupId>com.ibm.cos</groupId>
-    <version>1.0.3</version>
+    <version>1.2.0</version>
   </parent>
   <artifactId>cos-spring-boot-starter</artifactId>
   <name>cos-spring-boot-starter</name>
   <description>Spring Boot Starter for the official COS SDK for Java</description>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework</groupId>

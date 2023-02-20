@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ibm.cos</groupId>
   <artifactId>cos-spring</artifactId>
-  <version>1.0.3</version>
+  <version>1.2.0</version>
   <packaging>pom</packaging>
   <name>cos-spring</name>
   <description>Spring configuration for the official COS SDK for Java</description>
@@ -48,10 +48,10 @@
     <jre.version>1.8</jre.version>
     <junit.version>4.12</junit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.boot.test.version>2.0.9.RELEASE</spring.boot.test.version>
-    <spring.boot.version>1.5.21.RELEASE</spring.boot.version>
-    <spring.test.version>5.0.14.RELEASE</spring.test.version>
-    <spring.version>4.3.23.RELEASE</spring.version>
+    <spring.boot.test.version>3.0.2</spring.boot.test.version>
+    <spring.boot.version>3.0.2</spring.boot.version>
+    <spring.test.version>6.0.2</spring.test.version>
+    <spring.version>6.0.2</spring.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -71,11 +71,6 @@
     <dependency>
       <groupId>com.ibm.cos</groupId>
       <artifactId>ibm-cos-java-sdk</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>
@@ -171,7 +166,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.19.1</version>
+          <version>3.0.0-M7</version>
           <configuration>
             <!-- Expose spring test versions as system properties to enable test cases to validation -->
             <systemPropertyVariables>
