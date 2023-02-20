@@ -18,7 +18,8 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
@@ -27,199 +28,220 @@ import com.ibm.cloud.objectstorage.oauth.BasicIBMOAuthCredentials;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3ClientBuilder;
 import com.ibm.cos.spring.framework.EnableCOS;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.boot.test.util.EnvironmentTestUtils;
+import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
 @SuppressWarnings("deprecation")
-public class EnableCOSTest {
+class EnableCOSTest {
 
   private AnnotationConfigApplicationContext context;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     this.context = new AnnotationConfigApplicationContext();
   }
 
-  @After
-  public void cleanup() {
+  @AfterEach
+  void cleanup() {
     if (this.context != null) {
       this.context.close();
     }
   }
 
-  @Test(expected = BeanCreationException.class)
-  public void clientBuilderMissingEndpoint() {
-    this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context, "cos.location=myLocation", "cos.api-key=myApiKey");
-    this.context.refresh();
-  }
-
-  @Test(expected = BeanCreationException.class)
-  public void clientBuilderInvalidEndpoint() {
-    this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context, "cos.endpoint=notAUrl", "cos.location=us-south", "cos.api-key=myApiKey");
-    this.context.refresh();
-  }
-
-  @Test(expected = BeanCreationException.class)
-  public void clientBuilderMissingCredentials() {
-    this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context, "cos.endpoint=http://ibm.com", "cos.location=us-south");
-    this.context.refresh();
-  }
-
-  @Test(expected = BeanCreationException.class)
-  public void clientBuilderMissingAccessKey() {
-    this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context,
-        "cos.endpoint=http://ibm.com",
-        "cos.location=us-south",
-        "cos.secret-key=mySecretKey");
-    this.context.refresh();
-  }
-
-  @Test(expected = BeanCreationException.class)
-  public void clientBuilderMissingSecretKey() {
-    this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context,
-        "cos.endpoint=http://ibm.com",
-        "cos.location=us-south",
-        "cos.accessKey=myAccessKey");
-    this.context.refresh();
+  @Test
+  void clientBuilderMissingEndpoint() {
+    assertThrows(
+        BeanCreationException.class,
+        () -> {
+          this.context.register(EnableCOSConfig.class);
+          TestPropertyValues.of("cos.location=myLocation")
+              .and("cos.api-key=myApiKey")
+              .applyTo(this.context);
+          this.context.refresh();
+        });
   }
 
   @Test
-  public void clientBuilderBeanCreationWithEndpoint() {
+  void clientBuilderInvalidEndpoint() {
+    assertThrows(
+        BeanCreationException.class,
+        () -> {
+          this.context.register(EnableCOSConfig.class);
+          TestPropertyValues.of("cos.endpoint=notAUrl")
+              .and("cos.location=us-south")
+              .and("cos.api-key=myApiKey")
+              .applyTo(this.context);
+          this.context.refresh();
+        });
+  }
+
+  @Test
+  void clientBuilderMissingCredentials() {
+    assertThrows(
+        BeanCreationException.class,
+        () -> {
+          this.context.register(EnableCOSConfig.class);
+          TestPropertyValues.of("cos.endpoint=http://ibm.com")
+              .and("cos.location=us-south")
+              .applyTo(this.context);
+          this.context.refresh();
+        });
+  }
+
+  @Test
+  void clientBuilderMissingAccessKey() {
+    assertThrows(
+        BeanCreationException.class,
+        () -> {
+          this.context.register(EnableCOSConfig.class);
+          TestPropertyValues.of("cos.endpoint=http://ibm.com")
+              .and("cos.location=us-south")
+              .and("cos.secret-key=mySecretKey")
+              .applyTo(this.context);
+          this.context.refresh();
+        });
+  }
+
+  @Test
+  void clientBuilderMissingSecretKey() {
+    assertThrows(
+        BeanCreationException.class,
+        () -> {
+          this.context.register(EnableCOSConfig.class);
+          TestPropertyValues.of("cos.endpoint=http://ibm.com")
+              .and("cos.location=us-south")
+              .and("cos.accessKey=myAccessKey")
+              .applyTo(this.context);
+          this.context.refresh();
+        });
+  }
+
+  @Test
+  void clientBuilderBeanCreationWithEndpoint() {
     this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context, "cos.endpoint=http://ibm.com", "cos.api-key=myApiKey");
+    TestPropertyValues.of("cos.endpoint=http://ibm.com")
+        .and("cos.api-key=myApiKey")
+        .applyTo(this.context);
     this.context.refresh();
 
-    AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
+    final AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
     assertThat(clientBuilder, is(not(nullValue())));
 
-    EndpointConfiguration endpoint = clientBuilder.getEndpoint();
+    final EndpointConfiguration endpoint = clientBuilder.getEndpoint();
     assertThat(endpoint.getServiceEndpoint(), is("http://ibm.com"));
     assertThat(endpoint.getSigningRegion(), is(nullValue()));
   }
 
   @Test
-  public void clientBuilderBeanCreationWithEndpointAndLocation() {
+  void clientBuilderBeanCreationWithEndpointAndLocation() {
     this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context,
-        "cos.endpoint=http://ibm.com",
-        "cos.location=us-south",
-        "cos.api-key=myApiKey");
+    TestPropertyValues.of("cos.endpoint=http://ibm.com")
+        .and("cos.location=us-south")
+        .and("cos.api-key=myApiKey")
+        .applyTo(this.context);
     this.context.refresh();
 
-    AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
+    final AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
     assertThat(clientBuilder, is(not(nullValue())));
 
-    EndpointConfiguration endpoint = clientBuilder.getEndpoint();
+    final EndpointConfiguration endpoint = clientBuilder.getEndpoint();
     assertThat(endpoint.getServiceEndpoint(), is("http://ibm.com"));
     assertThat(endpoint.getSigningRegion(), is("us-south"));
   }
 
   @Test
-  public void clientBuilderBeanCreationWithOAuthCredentials() {
+  void clientBuilderBeanCreationWithOAuthCredentials() {
     this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context, "cos.endpoint=http://ibm.com", "cos.api-key=myApiKey");
+    TestPropertyValues.of("cos.endpoint=http://ibm.com")
+        .and("cos.api-key=myApiKey")
+        .applyTo(this.context);
     this.context.refresh();
 
-    AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
+    final AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
     assertThat(clientBuilder, is(not(nullValue())));
 
-    AWSCredentials credentials = clientBuilder.getCredentials().getCredentials();
+    final AWSCredentials credentials = clientBuilder.getCredentials().getCredentials();
     assertThat(credentials, instanceOf(BasicIBMOAuthCredentials.class));
 
-    BasicIBMOAuthCredentials oauth = (BasicIBMOAuthCredentials) credentials;
+    final BasicIBMOAuthCredentials oauth = (BasicIBMOAuthCredentials) credentials;
     assertThat(oauth.getApiKey(), is("myApiKey"));
     assertThat(oauth.getServiceInstanceId(), is(nullValue()));
   }
 
   @Test
-  public void clientBuilderBeanCreationWithOAuthCredentialsAndServiceInstanceId() {
+  void clientBuilderBeanCreationWithOAuthCredentialsAndServiceInstanceId() {
     this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context,
-        "cos.endpoint=http://ibm.com",
-        "cos.api-key=myApiKey",
-        "cos.service-instance-id=myServiceInstanceId");
+    TestPropertyValues.of("cos.endpoint=http://ibm.com")
+        .and("cos.api-key=myApiKey")
+        .and("cos.service-instance-id=myServiceInstanceId")
+        .applyTo(this.context);
     this.context.refresh();
 
-    AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
+    final AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
     assertThat(clientBuilder, is(not(nullValue())));
 
-    AWSCredentials credentials = clientBuilder.getCredentials().getCredentials();
+    final AWSCredentials credentials = clientBuilder.getCredentials().getCredentials();
     assertThat(credentials, instanceOf(BasicIBMOAuthCredentials.class));
 
-    BasicIBMOAuthCredentials oauth = (BasicIBMOAuthCredentials) credentials;
+    final BasicIBMOAuthCredentials oauth = (BasicIBMOAuthCredentials) credentials;
     assertThat(oauth.getApiKey(), is("myApiKey"));
     assertThat(oauth.getServiceInstanceId(), is("myServiceInstanceId"));
   }
 
   @Test
-  public void clientBuilderBeanCreationWithHmacCredentials() {
+  void clientBuilderBeanCreationWithHmacCredentials() {
     this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context,
-        "cos.endpoint=http://ibm.com",
-        "cos.access-key=myAccessKey",
-        "cos.secret-key=mySecretKey");
+    TestPropertyValues.of("cos.endpoint=http://ibm.com")
+        .and("cos.access-key=myAccessKey")
+        .and("cos.secret-key=mySecretKey")
+        .applyTo(this.context);
     this.context.refresh();
 
-    AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
+    final AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
     assertThat(clientBuilder, is(not(nullValue())));
 
-    AWSCredentials credentials = clientBuilder.getCredentials().getCredentials();
+    final AWSCredentials credentials = clientBuilder.getCredentials().getCredentials();
     assertThat(credentials, instanceOf(BasicAWSCredentials.class));
     assertThat(credentials.getAWSAccessKeyId(), is("myAccessKey"));
     assertThat(credentials.getAWSSecretKey(), is("mySecretKey"));
   }
 
   @Test
-  public void clientBuilderBeanCreationWithOAuthAndHmacCredentials() {
+  void clientBuilderBeanCreationWithOAuthAndHmacCredentials() {
     this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context,
-        "cos.endpoint=http://ibm.com",
-        "cos.api-key=myApiKey",
-        "cos.accessKey=myAccessKey",
-        "cos.secret-key=mySecretKey");
+    TestPropertyValues.of("cos.endpoint=http://ibm.com")
+        .and("cos.api-key=myApiKey")
+        .and("cos.accessKey=myAccessKey")
+        .and("cos.secret-key=mySecretKey")
+        .applyTo(this.context);
     this.context.refresh();
 
-    AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
+    final AmazonS3ClientBuilder clientBuilder = this.context.getBean(AmazonS3ClientBuilder.class);
     assertThat(clientBuilder, is(not(nullValue())));
 
-    AWSCredentials credentials = clientBuilder.getCredentials().getCredentials();
+    final AWSCredentials credentials = clientBuilder.getCredentials().getCredentials();
     // OAuth takes precedence over Hmac credentials
     assertThat(credentials, instanceOf(BasicIBMOAuthCredentials.class));
 
-    BasicIBMOAuthCredentials oauth = (BasicIBMOAuthCredentials) credentials;
+    final BasicIBMOAuthCredentials oauth = (BasicIBMOAuthCredentials) credentials;
     assertThat(oauth.getApiKey(), is("myApiKey"));
     assertThat(oauth.getServiceInstanceId(), is(nullValue()));
   }
 
   @Test
-  public void clientBeanCreation() {
+  void clientBeanCreation() {
     this.context.register(EnableCOSConfig.class);
-    EnvironmentTestUtils.addEnvironment(
-        this.context, "cos.endpoint=http://ibm.com", "cos.api-key=myApiKey");
+    TestPropertyValues.of("cos.endpoint=http://ibm.com")
+        .and("cos.api-key=myApiKey")
+        .applyTo(this.context);
     this.context.refresh();
 
-    AmazonS3 client = this.context.getBean(AmazonS3.class);
+    final AmazonS3 client = this.context.getBean(AmazonS3.class);
     assertThat(client, is(not(nullValue())));
   }
 
