@@ -4,7 +4,7 @@
   <parent>
     <artifactId>cos-spring</artifactId>
     <groupId>com.ibm.cos</groupId>
-    <version>1.0.3</version>
+    <version>1.2.0</version>
   </parent>
   <artifactId>cos-spring-boot-starter-test</artifactId>
   <name>cos-spring-boot-starter-test</name>
@@ -21,6 +21,18 @@
       <groupId>com.ibm.cos</groupId>
       <artifactId>cos-spring-boot-starter</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>3.0.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.9.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>

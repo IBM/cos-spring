@@ -25,12 +25,12 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootVersion;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(COSConfigurationProperties.class)
 public class COSAutoConfiguration {
 
@@ -38,7 +38,7 @@ public class COSAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public AmazonS3ClientBuilder clientBuilder() {
+  AmazonS3ClientBuilder clientBuilder() {
     if (config.getEndpoint() == null) {
       throw new NullPointerException("endpoint must not be null");
     }
@@ -65,7 +65,7 @@ public class COSAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public AmazonS3 client(AmazonS3ClientBuilder builder) {
+  AmazonS3 client(AmazonS3ClientBuilder builder) {
     return builder.build();
   }
 }

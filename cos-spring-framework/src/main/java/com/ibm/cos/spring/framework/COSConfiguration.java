@@ -34,7 +34,7 @@ public class COSConfiguration {
   @Autowired COSConfigurationProperties config;
 
   @Bean
-  public AmazonS3ClientBuilder clientBuilder() {
+  AmazonS3ClientBuilder clientBuilder() {
     if (config.getEndpoint() == null) {
       throw new NullPointerException("endpoint must not be null");
     }
@@ -60,7 +60,7 @@ public class COSConfiguration {
   }
 
   @Bean
-  public AmazonS3 client(AmazonS3ClientBuilder builder) {
+  AmazonS3 client(AmazonS3ClientBuilder builder) {
     return builder.build();
   }
 }
